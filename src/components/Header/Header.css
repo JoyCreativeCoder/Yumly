@@ -6,22 +6,21 @@
   display: grid;
   grid-template-columns: auto 1fr auto;
   gap: 16px;
-  background: white;
   padding: 12px clamp(10px, 3vw, 20px);
   border-bottom: 1px solid var(--border);
+  background: rgba(14, 17, 22, 0.7);
+  backdrop-filter: saturate(140%) blur(6px);
+  padding: 12px clamp(10px, 3vw, 20px);
+  border-bottom: 1px solid #242a36;
 }
 
-.search {
-  justify-self: center;
-  width: min(680px, 100%);
-  outline: none;
-}
-
-.search input {
-  padding: 0.8rem 1rem;
-  border: 1px solid #ddd;
-  border-radius: 30px;
-  width: 600px;
+.title {
+  margin: 0;
+  font-weight: 700;
+  font-size: clamp(18px, 2vw, 22px);
+  letter-spacing: 0.2px;
+  color: #e6e7eb;
+  line-height: 1.1;
 }
 
 .actions {
