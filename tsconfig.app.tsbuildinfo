@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/components/footer/footer.tsx","./src/components/header/header.tsx","./src/components/pages/details/details.tsx","./src/components/pages/favorite/favorite.tsx","./src/components/pages/home/home.tsx","./src/data/recipes.ts","./src/lib/api.ts","./src/lib/http.ts","./src/lib/storage.ts"],"version":"5.9.3"}
