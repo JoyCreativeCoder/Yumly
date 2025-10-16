@@ -20,9 +20,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const r = await fetch(url);
     if (!r.ok) {
       const text = await r.text();
-      return res
-        .status(r.status)
-        .json({ error: "Upstream error", details: text });
+      return res.status(r.status).json({
+        error: "Upstream error",
+        details: text,
+        requested: url.toString(),
+      });
     }
     const data = await r.json();
 
