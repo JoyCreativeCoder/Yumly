@@ -9,7 +9,6 @@
   padding: 12px clamp(10px, 3vw, 20px);
   border-bottom: 1px solid var(--border);
   background: rgba(14, 17, 22, 0.7);
-  backdrop-filter: saturate(140%) blur(6px);
   padding: 12px clamp(10px, 3vw, 20px);
   border-bottom: 1px solid #242a36;
 }

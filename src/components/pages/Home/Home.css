@@ -27,8 +27,8 @@
   align-items: center;
   gap: 6px;
   padding: 6px;
-  background: #151922; /* surface */
-  border: 1px solid #242a36; /* border */
+  background: #11141c;
+  border: 1px solid #242a36;
   border-radius: 999px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
@@ -37,24 +37,40 @@
   appearance: none;
   background: transparent;
   border: 1px solid transparent;
-  color: #a0a8b3; /* muted */
+  color: #a0a8b3;
   padding: 10px 14px;
   border-radius: 999px;
   font: 500 0.93rem/1.1 system-ui, -apple-system, "Segoe UI", Roboto, Inter,
     "Helvetica Neue", Arial;
   cursor: pointer;
-  transition: transform 0.05s ease, background-color 0.2s ease, color 0.2s ease;
+  transition: transform 0.05s ease, background-color 0.2s ease, color 0.2s ease,
+    box-shadow 0.25s ease, border-color 0.25s ease;
 }
 .btn:hover {
   transform: translateY(-1px);
 }
 
 .btn--active {
-  background: #151922; /* surface */
-  color: #e6e7eb; /* text */
-  border-color: #242a36; /* border */
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35),
+  background: #11141c;
+  color: #e6e7eb;
+  border-color: #242a36;
+  box-shadow: 0 0 0 1px #242a36, 0 0 18px rgba(123, 92, 255, 0.35),
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  position: relative;
+  overflow: hidden;
+}
+.btn--active::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(123, 92, 255, 0.18),
+    transparent
+  );
+  transform: translateX(-120%);
+  animation: sweep 2.2s ease-out forwards;
 }
 
 /* Search */
@@ -69,7 +85,7 @@
   padding: 14px 16px;
   border: 1px solid #242a36;
   border-radius: 999px;
-  background: #151922; /* surface */
+  background: #151922;
   color: #e6e7eb;
   outline: none;
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25);
@@ -77,10 +93,6 @@
 }
 .search__input::placeholder {
   color: #a0a8b3;
-}
-.search__input:focus {
-  border-color: #f2994a; /* spiced orange */
-  box-shadow: 0 0 0 3px rgba(242, 153, 74, 0.28);
 }
 
 /* Chip cloud */
@@ -96,7 +108,7 @@
 .chip {
   padding: 8px 12px;
   border-radius: 999px;
-  background: #1b2030; /* soft chip */
+  background: #1b2030;
   border: 1px solid #242a36;
   color: #a0a8b3;
   font-size: 0.9rem;
@@ -105,13 +117,40 @@
     border-color 0.2s ease;
 }
 .chip:hover {
-  background: #f2994a; /* spiced orange */
-  color: #1a1a1a; /* readable on orange */
-  border-color: #d8833f;
-  transform: translateY(-1px);
 }
 .chip:active {
   transform: translateY(0);
+}
+
+@keyframes sweep {
+  to {
+    transform: translateX(120%);
+  }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+@keyframes contentIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @media (min-width: 768px) {

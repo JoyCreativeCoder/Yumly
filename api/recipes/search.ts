@@ -1,4 +1,3 @@
-// api/recipes/search.ts
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
 function pickCalories(nutrition?: {
@@ -49,7 +48,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       number: "10",
       addRecipeInformation: "true",
       addRecipeNutrition: "true",
-      // intentionally NOT setting instructionsRequired to avoid filtering out valid results
     }).toString();
 
     // Add a small timeout so dev/builds don’t hang forever
