@@ -31,9 +31,9 @@ export default function Details() {
         if (!res.ok) throw new Error("Not found");
         const json = await res.json();
         setData(json);
-      } catch (e) {
-        console.error(e);
-        setError(e.message || "failed to load recipe");
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : String(e);
+        setError(msg);
       }
     })();
   }, [id]);
