@@ -1,0 +1,264 @@
+* {
+  box-sizing: border-box;
+}
+
+.recipe {
+  background: #0e1116;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  color: #e6e7eb;
+  min-height: 100dvh;
+}
+
+.recipe__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  align-items: start;
+  margin-top: 50px;
+}
+
+.recipe__media {
+  aspect-ratio: 3/ 3;
+}
+
+.recipe__media img {
+  width: 100%;
+  border-radius: 20px;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.recipe__chips {
+  margin-top: 14px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  list-style-type: none;
+  padding-left: 0;
+}
+.chip {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #151922;
+  border: 1px solid rgba(56, 248, 225, 0.25);
+  font-size: 14px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.recipe__title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.recipe__tabs {
+  /* tabs container */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #151922;
+  padding: 6px;
+  border-radius: 999px;
+  gap: 6px;
+}
+.tabs__btn {
+  appearance: none;
+  border: 1px solid rgba(56, 248, 225, 0.2);
+  background: transparent;
+  color: #e6e7eb;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: 600;
+  width: 100%;
+  cursor: pointer;
+}
+.tabs__btn--active {
+  background: #38f8e1;
+  color: #0e1116;
+  border-color: #38f8e1;
+}
+
+.recipe__panel {
+  background: transparent;
+  overflow: auto;
+}
+
+/* .is-hidden {
+  display: none;
+}  */
+
+.ingredients {
+  list-style-type: none;
+  margin-top: 20px;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.ingredients__item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  background: #171b22;
+  border: 1px solid #202635;
+  border-radius: 16px;
+}
+
+.ingredients__check {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.ingredients__name {
+  font-weight: 600;
+}
+
+.ingredients__qty {
+  color: #9da3af;
+  font-size: 14px;
+}
+
+.recipe__actions {
+  margin: 40px 0 24px;
+}
+.action {
+  appearance: none;
+  border: 1px solid #e6e7eb;
+  background: transparent;
+  color: #e6e7eb;
+  padding: 12px 20px;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.action:hover {
+  box-shadow: 0 0 0 6px rgba(56, 248, 225, 0.08);
+  border-color: #38f8e1;
+}
+
+@media (min-width: 960px) {
+  .recipe__grid {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    column-gap: 40px;
+  }
+}
+
+/* ---------- Steps list ---------- */
+.steps {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 16px;
+}
+
+/* one row: badge + card */
+.steps__item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 12px;
+}
+
+/* card container */
+.steps__card {
+  background: #151922; /* surface */
+  border: 1px solid #202635; /* subtle border */
+  border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* step text */
+.steps__text {
+  margin: 0;
+  color: #e6e7eb;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* actions row under text */
+.steps__actions {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ---------- Compact ghost button ---------- */
+.btn {
+  appearance: none;
+  border: none;
+  background: none;
+  color: #e6e7eb;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn--ghost {
+  border: 1px solid rgba(56, 248, 225, 0.35);
+  background: rgba(56, 248, 225, 0.07);
+  border-radius: 10px;
+}
+.btn--compact {
+  padding: 6px 10px;
+  font-size: 13px;
+}
+.btn--ghost:hover,
+.btn--ghost:focus-visible {
+  outline: none;
+  border-color: #38f8e1;
+  box-shadow: 0 0 0 6px rgba(56, 248, 225, 0.08);
+}
+
+/* ---------- Timestamp chip ---------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #11151d;
+  border: 1px solid #262d3b;
+  color: #e6e7eb;
+  font-size: 13px;
+  line-height: 1;
+}
+.chip--mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+
+/* ---------- Responsive tweaks ---------- */
+@media (min-width: 960px) {
+  .steps {
+    gap: 18px;
+  }
+  .steps__badge {
+    width: 36px;
+    height: 36px;
+    font-size: 15px;
+  }
+  .steps__card {
+    padding: 16px 18px;
+  }
+}
+
+/* Motion-safety */
+@media (prefers-reduced-motion: no-preference) {
+  .btn--ghost {
+    transition: box-shadow 160ms ease, border-color 160ms ease;
+  }
+}

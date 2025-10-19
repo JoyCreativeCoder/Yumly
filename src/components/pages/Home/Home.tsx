@@ -1,11 +1,56 @@
 import "./Home.css";
 import { useState } from "react";
-// import RecipeCard from "../../RecipeCard/RecipeCard";
+import { useNavigate } from "react-router-dom";
 import Header from "../../Header/Header";
-// import { recipes } from "@/data/recipes";
 
 export default function Home() {
   const [mode, setMode] = useState("recipes");
+  const [query, setQuery] = useState("");
+  const [hint, setHint] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  async function fetchRecipe(q: string) {
+    const res = await fetch(
+      "/api/recipes/search?query=" + encodeURIComponent(q)
+    );
+    if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+    return res.json();
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("submitted");
+    const q = query.trim();
+
+    if (!q) {
+      setError("Type something");
+      return;
+    }
+    setError("");
+    setLoading(true);
+    setHint("");
+
+    try {
+      const data = await fetchRecipe(q);
+      if (data.id) {
+        navigate("/recipe/" + data.id);
+        console.log(data);
+      } else {
+        setHint(data.hint || "No result found. Try a simpler term.");
+        console.log(data.hint);
+      }
+    } catch (err: any) {
+      setError("Something went wrong. Please try again.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+      setQuery("");
+    }
+  };
+
   return (
     <div className="home">
       <Header />
@@ -32,16 +77,22 @@ export default function Home() {
         </div>
 
         <div className="search">
-          <input
-            className="search__input"
-            type="search"
-            placeholder={
-              mode === "recipes"
-                ? "Search specific recipes..."
-                : "Search by ingredients..."
-            }
-            aria-label="Search recipes"
-          />
+          <form className="search" onSubmit={handleSubmit}>
+            <input
+              className="search__input"
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+              }}
+              type="search"
+              placeholder={
+                mode === "recipes"
+                  ? "Search specific recipes..."
+                  : "Search by ingredients..."
+              }
+              aria-label="Search recipes"
+            />
+          </form>
         </div>
 
         <ul className="chips" aria-label="Popular tags">
