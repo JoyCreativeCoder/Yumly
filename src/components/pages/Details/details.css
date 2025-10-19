@@ -39,6 +39,7 @@
   gap: 20px;
   flex-wrap: wrap;
   list-style-type: none;
+  padding-left: 0;
 }
 .chip {
   padding: 8px 12px;
@@ -87,6 +88,7 @@
 
 .recipe__panel {
   background: transparent;
+  overflow: auto;
 }
 
 /* .is-hidden {
@@ -150,5 +152,113 @@
   .recipe__grid {
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
     column-gap: 40px;
+  }
+}
+
+/* ---------- Steps list ---------- */
+.steps {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 16px;
+}
+
+/* one row: badge + card */
+.steps__item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 12px;
+}
+
+/* card container */
+.steps__card {
+  background: #151922; /* surface */
+  border: 1px solid #202635; /* subtle border */
+  border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+}
+
+/* step text */
+.steps__text {
+  margin: 0;
+  color: #e6e7eb;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* actions row under text */
+.steps__actions {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ---------- Compact ghost button ---------- */
+.btn {
+  appearance: none;
+  border: none;
+  background: none;
+  color: #e6e7eb;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn--ghost {
+  border: 1px solid rgba(56, 248, 225, 0.35);
+  background: rgba(56, 248, 225, 0.07);
+  border-radius: 10px;
+}
+.btn--compact {
+  padding: 6px 10px;
+  font-size: 13px;
+}
+.btn--ghost:hover,
+.btn--ghost:focus-visible {
+  outline: none;
+  border-color: #38f8e1;
+  box-shadow: 0 0 0 6px rgba(56, 248, 225, 0.08);
+}
+
+/* ---------- Timestamp chip ---------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #11151d;
+  border: 1px solid #262d3b;
+  color: #e6e7eb;
+  font-size: 13px;
+  line-height: 1;
+}
+.chip--mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+
+/* ---------- Responsive tweaks ---------- */
+@media (min-width: 960px) {
+  .steps {
+    gap: 18px;
+  }
+  .steps__badge {
+    width: 36px;
+    height: 36px;
+    font-size: 15px;
+  }
+  .steps__card {
+    padding: 16px 18px;
+  }
+}
+
+/* Motion-safety */
+@media (prefers-reduced-motion: no-preference) {
+  .btn--ghost {
+    transition: box-shadow 160ms ease, border-color 160ms ease;
   }
 }
