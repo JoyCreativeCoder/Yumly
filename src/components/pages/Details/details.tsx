@@ -16,7 +16,7 @@ type Recipe = {
 export default function Details() {
   const { id } = useParams<{ id: string }>();
   const [data, setData] = useState<Recipe | null>(null);
-  const [detailsMode, setDetailsMode] = useState("Ingredient");
+  const [detailsMode, setDetailsMode] = useState("Ingredients");
   const [error, setError] = useState<string | null>(null);
 
   const handleDetailsMode = (mode: "Ingredients" | "Directions") => {
@@ -166,10 +166,11 @@ export default function Details() {
                       <div className="steps__card">
                         <p className="steps__text">{text}</p>
                         <div className="steps__actions">
-                          {/* optional: only render when you detect a duration */}
-                          {/* <button className="btn btn--ghost btn--compact">⏱ Start 15 min timer</button> */}
-                          {/* optional timestamp chip */}
-                          {/* <span className="chip chip--mono">03:21</span> */}
+                          <button className="btn btn--ghost btn--compact">
+                            ⏱ Start 15 min timer
+                          </button>
+                          optional timestamp chip
+                          <span className="chip chip--mono">03:21</span>
                         </div>
                       </div>
                     </li>

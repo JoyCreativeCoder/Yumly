@@ -1,30 +1,47 @@
+/* ---------- Reset */
 * {
   box-sizing: border-box;
 }
+html,
+body,
+#root {
+  height: 100%;
+}
 
-/* Page */
+/* ---------- Page */
 .home {
-  background: #0e1116; /* charcoal */
-  color: #e6e7eb; /* text */
   min-height: 100dvh;
   display: grid;
   grid-template-rows: auto 1fr;
+  color: #e6e7eb;
+  background: radial-gradient(
+      1200px 600px at 60% 10%,
+      rgba(255, 187, 92, 0.06),
+      transparent 60%
+    ),
+    radial-gradient(
+      1000px 500px at 10% 0%,
+      rgba(92, 122, 255, 0.05),
+      transparent 55%
+    ),
+    #0e1116;
 }
 
+/* ---------- Main container */
 .home__content {
-  width: min(720px, 100%);
+  width: min(860px, 92%);
   margin: 0 auto;
-  padding: 6vh 16px 24px;
+  padding: 12vh 16px 32px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 18px;
+  gap: 24px;
 }
 
-/* Toggle (Recipes | Ingredients) */
+/* ---------- Mode toggle */
 .mode-toggle {
-  display: inline-flex;
-  align-items: center;
+  width: min(300px, 100%);
+  display: flex;
   gap: 6px;
   padding: 6px;
   background: #11141c;
@@ -34,131 +51,354 @@
 }
 
 .btn {
+  flex: 1 1 0;
   appearance: none;
   background: transparent;
   border: 1px solid transparent;
   color: #a0a8b3;
-  padding: 10px 14px;
+  padding: 12px 18px;
   border-radius: 999px;
-  font: 500 0.93rem/1.1 system-ui, -apple-system, "Segoe UI", Roboto, Inter,
-    "Helvetica Neue", Arial;
+  font: 600 1rem/1 system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial;
   cursor: pointer;
-  transition: transform 0.05s ease, background-color 0.2s ease, color 0.2s ease,
-    box-shadow 0.25s ease, border-color 0.25s ease;
+  transition: background-color 180ms ease, color 180ms ease,
+    box-shadow 220ms ease;
 }
 .btn:hover {
-  transform: translateY(-1px);
+  color: #cfd5de;
+}
+.btn:active {
+  transform: none;
 }
 
 .btn--active {
-  background: #11141c;
-  color: #e6e7eb;
-  border-color: #242a36;
-  box-shadow: 0 0 0 1px #242a36, 0 0 18px rgba(123, 92, 255, 0.35),
-    inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  position: relative;
-  overflow: hidden;
-}
-.btn--active::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(123, 92, 255, 0.18),
-    transparent
-  );
-  transform: translateX(-120%);
-  animation: sweep 2.2s ease-out forwards;
+  color: #0f141b !important;
+  background: #ffb84f !important;
+  border-color: transparent;
+  box-shadow: none;
 }
 
-/* Search */
-.search {
+/* ---------- Search */
+.search__form {
   width: 100%;
   display: grid;
-  place-items: center;
-  margin-top: 6px;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
 }
+
 .search__input {
-  width: min(680px, 100%);
-  padding: 14px 16px;
+  width: 100%;
+  padding: 18px 20px; /* ~56px tall */
   border: 1px solid #242a36;
-  border-radius: 999px;
+  border-radius: 18px;
   background: #151922;
   color: #e6e7eb;
   outline: none;
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.12s;
+  font-size: 1rem;
 }
 .search__input::placeholder {
-  color: #a0a8b3;
+  color: #8f97a3;
+}
+.search__input:focus {
+  border-color: #334155;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15),
+    inset 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 
-/* Chip cloud */
+/* ---------- Get Recipe (brighter) */
+.btn_getrecipe {
+  appearance: none;
+  border: 0;
+  padding: 16px 26px;
+  border-radius: 16px;
+  font: 700 1rem/1 system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial;
+  background: #ffb84f;
+  color: #0b0e12;
+  cursor: pointer;
+  transition: transform 90ms ease, filter 0.2s ease;
+}
+.btn_getrecipe:hover {
+  transform: translateY(-1px);
+}
+.btn_getrecipe:active {
+  transform: translateY(0);
+}
+.btn_getrecipe[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: saturate(0.85);
+}
+
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(0, 0, 0, 0.15);
+  border-top-color: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+/* ---------- Chips */
 .chips {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  padding: 8px 0 0;
-  margin: 6px 0 0;
+  gap: 12px;
+  margin: 4px 0 0;
+  padding: 2px 0 0;
   justify-content: center;
+  align-items: center;
 }
 .chip {
-  padding: 8px 12px;
+  padding: 16px 18px;
   border-radius: 999px;
   background: #1b2030;
   border: 1px solid #242a36;
   color: #a0a8b3;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: transform 0.05s ease, background-color 0.2s ease, color 0.2s ease,
-    border-color 0.2s ease;
+  font-size: 0.95rem;
+  cursor: pointer; /* ---------- Reset */
+  * {
+    box-sizing: border-box;
+  }
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  /* ---------- Page */
+  .home {
+    min-height: 100dvh;
+    display: grid;
+    grid-template-rows: auto 1fr; /* header, then content */
+    color: #e6e7eb;
+    background: radial-gradient(
+        1200px 600px at 60% 10%,
+        rgba(255, 187, 92, 0.06),
+        transparent 60%
+      ),
+      radial-gradient(
+        1000px 500px at 10% 0%,
+        rgba(92, 122, 255, 0.05),
+        transparent 55%
+      ),
+      #0e1116;
+  }
+
+  /* ---------- Main container (center the whole stack) */
+  .home__content {
+    width: min(900px, 92%);
+    margin: 0 auto;
+    min-height: calc(100dvh - 72px); /* leave room for header */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* vertical centering */
+    gap: 24px;
+    padding: 0 16px;
+  }
+
+  /* ---------- Mode toggle (flat, clean) */
+  .mode-toggle {
+    width: min(520px, 100%);
+    display: flex;
+    gap: 8px;
+    padding: 6px;
+    background: #0f141b; /* solid track */
+    border: 1px solid #1f2532;
+    border-radius: 14px;
+    box-shadow: none;
+    align-self: center;
+  }
+
+  /* Toggle pills */
+  .btn {
+    flex: 1 1 0;
+    appearance: none;
+    background: #0f141b; /* solid inactive */
+    border: 1px solid #1f2532;
+    color: #a0a8b3;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font: 600 0.98rem/1 system-ui, -apple-system, "Segoe UI", Roboto, Inter,
+      Arial;
+    cursor: pointer;
+    transition: background-color 180ms ease, color 180ms ease,
+      border-color 180ms ease;
+  }
+  .btn:hover {
+    background: #121925;
+    color: #cfd5de;
+  }
+  .btn:active {
+    transform: none;
+  }
+  .btn--active {
+    background: #ffc562; /* solid saffron */
+    border-color: #ffc562;
+    color: #171a1f;
+    box-shadow: none;
+  }
+
+  /* ---------- Search row (centered, aligned heights) */
+  .search__form {
+    width: min(900px, 100%);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* Make input and button the same height */
+  .search__input,
+  .btn_getrecipe {
+    min-height: 56px;
+    font-size: 1rem;
+  }
+
+  /* Input */
+  .search__input {
+    width: 100%;
+    padding: 0 20px;
+    border: 1px solid #242a36;
+    border-radius: 18px;
+    background: #151922;
+    color: #e6e7eb;
+    outline: none;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25);
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.12s;
+  }
+  .search__input::placeholder {
+    color: #8f97a3;
+  }
+  .search__input:focus {
+    border-color: #334155;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15),
+      inset 0 1px 2px rgba(0, 0, 0, 0.25);
+  }
+
+  /* ---------- Get Recipe (brighter CTA) */
+  .btn_getrecipe {
+    padding: 0 28px; /* vertical handled by min-height */
+    border: 0;
+    border-radius: 16px;
+    color: #0b0e12;
+    background: linear-gradient(90deg, #ffd67a, #ff9393); /* bright */
+    box-shadow: 0 16px 40px rgba(255, 176, 96, 0.55);
+    cursor: pointer;
+    transition: transform 90ms ease, filter 0.2s ease;
+  }
+  .btn_getrecipe:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.08);
+  }
+  .btn_getrecipe:active {
+    transform: translateY(0);
+  }
+  .btn_getrecipe[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    filter: saturate(0.85);
+  }
+
+  /* ---------- Chips (bigger + sleek animated border) */
+  .chips {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 8px;
+    padding-top: 4px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .chip {
+    position: relative;
+    padding: 14px 22px; /* bigger */
+    border-radius: 999px;
+    background: #1b2030;
+    border: 1px solid #242a36;
+    color: #c2c7d0;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, transform 0.08s ease,
+      border-color 0.2s;
+    z-index: 0;
+  }
+  .chip:hover {
+    color: #e6e7eb;
+    transform: translateY(-1px);
+    border-color: transparent;
+  }
+  .chip::after {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: conic-gradient(from 0turn, #ffc562, #ff8b8b, #6ea8ff, #ffc562);
+    /* ring only */
+    -webkit-mask: linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    padding: 1px;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    z-index: -1;
+  }
+  .chip:hover::after {
+    opacity: 1;
+    animation: chip-spin 1.6s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chip:hover::after {
+      animation: none;
+    }
+  }
+
+  /* ---------- Animations (spinner/chip only) */
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes chip-spin {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  /* ---------- Responsive polish */
+  @media (min-width: 768px) {
+    .home__content {
+      gap: 26px;
+    }
+  }
+
+  transition: background-color 0.2s, color 0.2s, transform 0.06s ease;
 }
 .chip:hover {
-}
-.chip:active {
-  transform: translateY(0);
+  color: #e6e7eb;
+  transform: translateY(-1px);
 }
 
-@keyframes sweep {
+/* ---------- Animations (spinner only) */
+@keyframes spin {
   to {
-    transform: translateX(120%);
-  }
-}
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-  }
-}
-@keyframes contentIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px) scale(0.99);
-  }
-  to {
-    opacity: 1;
-    transform: none;
+    transform: rotate(360deg);
   }
 }
 
+/* ---------- Responsive polish */
 @media (min-width: 768px) {
   .home__content {
-    gap: 20px;
-    padding-top: 10vh;
-  }
-  .btn {
-    font-size: 0.96rem;
+    gap: 26px;
+    padding-top: 14vh;
   }
 }

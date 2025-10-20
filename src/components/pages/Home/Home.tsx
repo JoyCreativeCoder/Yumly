@@ -76,7 +76,7 @@ export default function Home() {
           </button>
         </div>
 
-        <div className="search">
+        {/* <div className="search">
           <form className="search" onSubmit={handleSubmit}>
             <input
               className="search__input"
@@ -93,7 +93,30 @@ export default function Home() {
               aria-label="Search recipes"
             />
           </form>
-        </div>
+        </div> */}
+
+        <form className="search__form" role="search" onSubmit={handleSubmit}>
+          <input
+            className="search__input search__input--lg"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            type="search"
+            placeholder={
+              mode === "recipes"
+                ? "Search specific recipes…"
+                : "Search by ingredients…"
+            }
+            aria-label="Search recipes"
+          />
+          <button
+            className="btn_getrecipe"
+            type="submit"
+            disabled={!query.trim() || loading}
+            aria-busy={loading}
+          >
+            {loading ? <span className="spinner" aria-hidden /> : "Get Recipe"}
+          </button>
+        </form>
 
         <ul className="chips" aria-label="Popular tags">
           <li>
