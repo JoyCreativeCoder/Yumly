@@ -12,7 +12,46 @@
   min-height: 100dvh;
 }
 
-/* Layout */
+.go-back {
+  border-radius: 999px;
+}
+
+.go-back {
+  position: absolute;
+  top: 24px;
+  left: 54px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  background: #151922; /* subtle surface */
+  border: 1px solid #242a36; /* faint outline */
+  color: #e6e7eb; /* icon inherits this */
+  cursor: pointer;
+  transition: background 0.25s, transform 0.2s, color 0.25s;
+}
+
+.go-back:hover {
+  background: #1d2230;
+  color: #ffc562;
+  transform: translateY(-2px);
+}
+
+.go-back:active {
+  transform: scale(0.95);
+  background: #11141c;
+}
+
+.go-back svg {
+  pointer-events: none;
+}
+
+.icon {
+  color: #ffc562;
+}
+
 .recipe__grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -20,14 +59,7 @@
   align-items: start;
   margin-top: 50px;
 }
-@media (min-width: 960px) {
-  .recipe__grid {
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
-    column-gap: 40px;
-  }
-}
 
-/* Media */
 .recipe__media {
   aspect-ratio: 3/3;
 }
@@ -39,7 +71,6 @@
   border-radius: 20px;
 }
 
-/* Meta chips (left, under image) */
 .recipe__chips {
   margin-top: 14px;
   display: flex;
@@ -63,14 +94,12 @@
   gap: 8px;
 }
 
-/* Title */
 .recipe__title {
   font-size: 28px;
   font-weight: 700;
   letter-spacing: 0.5px;
 }
 
-/* Tabs */
 .recipe__tabs {
   display: flex;
   gap: 6px;
@@ -92,16 +121,13 @@
   transition: background-color 0.18s ease, color 0.18s ease,
     border-color 0.18s ease;
 }
-.tabs__btn:hover {
-  color: #d7dbe2;
-}
+
 .tabs__btn--active {
   background: #ffc562;
   color: #171a1f;
   border-color: #ffc562;
 }
 
-/* Panel */
 .recipe__panel {
   background: transparent;
 }
@@ -144,26 +170,39 @@
   padding: 0;
 }
 .ingredients__item {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
+  display: flex;
+  align-items: flex-start;
   gap: 12px;
-  padding: 12px 18px;
-  background: #151922; /* surface */
-  border: 1px solid #242a36; /* border */
-  border-radius: 16px;
+  padding: 12px 0;
+  background: transparent;
+  border: none;
 }
+
+.ingredients__item label {
+  order: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .ingredients__check {
-  width: 18px;
-  height: 18px;
+  order: 2;
+  flex: 0 0 auto;
+  align-self: center;
+  width: 20px;
+  height: 20px;
   cursor: pointer;
 }
+
 .ingredients__name {
   font-weight: 600;
+  line-height: 1.2;
 }
+
 .ingredients__qty {
-  color: #9da3af;
   font-size: 14px;
+  color: #6b7280;
 }
 
 /* Actions */
@@ -182,11 +221,6 @@
   transition: border-color 0.16s ease, box-shadow 0.16s ease,
     background-color 0.16s ease;
 }
-.action:hover {
-  background: #171b22;
-  border-color: #334155;
-  box-shadow: 0 0 0 6px rgba(51, 65, 85, 0.18);
-}
 
 /* ---------- Steps (Directions) ---------- */
 .steps {
@@ -203,8 +237,8 @@
   gap: 12px;
 }
 .steps__card {
-  background: #151922; /* surface */
-  border: 1px solid #242a36; /* border */
+  background: #151922;
+  border: 1px solid #242a36;
   border-radius: 16px;
   padding: 14px 16px;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
@@ -232,42 +266,40 @@
   font-weight: 600;
   cursor: pointer;
 }
-.btn--ghost {
-  border: 1px solid #242a36;
-  background: #11151d;
-  border-radius: 10px;
-  transition: border-color 0.16s ease, box-shadow 0.16s ease,
-    background-color 0.16s ease;
-}
+
 .btn--compact {
   padding: 6px 10px;
   font-size: 13px;
 }
-.btn--ghost:hover,
-.btn--ghost:focus-visible {
-  outline: none;
-  background: #151a23;
-  border-color: #334155;
-  box-shadow: 0 0 0 6px rgba(51, 65, 85, 0.18);
-}
 
-/* Timestamp chip used in steps */
-.chip--mono {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    "Liberation Mono", "Courier New", monospace;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: #11151d;
-  border: 1px solid #242a36;
-  color: #e6e7eb;
-  font-size: 13px;
-  line-height: 1;
-}
-
-/* Motion prefs */
-@media (prefers-reduced-motion: no-preference) {
-  .btn--ghost {
-    transition: box-shadow 160ms ease, border-color 160ms ease,
-      background-color 160ms ease;
+@media (min-width: 960px) {
+  .recipe__grid {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    column-gap: 40px;
   }
+}
+
+.recipe__actions {
+  display: flex;
+}
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1;
+  padding: 10px 14px;
+  color: #151a23;
+  border-radius: 10px;
+}
+
+.action--ghost {
+  background: #ffc562;
+}
+
+.action svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  flex: 0 0 auto;
 }

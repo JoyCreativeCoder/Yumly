@@ -1,6 +1,7 @@
 import "./details.css";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { AlarmClock, Copy, Flame, MoveLeft, Utensils } from "lucide-react";
 
 type Ingredient = { name: string; amount?: number; unit?: string };
 type Recipe = {
@@ -23,6 +24,16 @@ export default function Details() {
     setDetailsMode(mode);
   };
 
+  const navigate = useNavigate();
+
+  const goback = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate("/", { replace: true });
+    }
+  };
+
   useEffect(() => {
     if (!id) return;
     (async () => {
@@ -42,6 +53,15 @@ export default function Details() {
 
   return (
     <main className="recipe" role="main">
+      <button
+        type="button"
+        className="go-back"
+        onClick={goback}
+        aria-label="Go back"
+      >
+        <MoveLeft size={36} strokeWidth={2} aria-hidden="true" />
+      </button>
+
       {error && <p>Error: {error}</p>}
 
       {!error && !data && (
@@ -76,13 +96,22 @@ export default function Details() {
 
             <ul className="recipe__chips" aria-label="Recipe meta">
               <li className="chip">
-                <span aria-hidden>⏱</span> {data.readyInMinutes} min
+                <span aria-hidden>
+                  <AlarmClock size={24} strokeWidth={1} className="icon" />
+                </span>{" "}
+                {data.readyInMinutes} min
               </li>
               <li className="chip">
-                <span aria-hidden>🍽</span> {data.servings} servings
+                <span aria-hidden>
+                  <Utensils size={24} strokeWidth={1} className="icon" />
+                </span>{" "}
+                {data.servings} servings
               </li>
               <li className="chip">
-                <span aria-hidden>🔥</span> {data.calories} kcal
+                <span aria-hidden>
+                  <Flame size={24} strokeWidth={1} className="icon" />
+                </span>{" "}
+                {data.calories} kcal
               </li>
             </ul>
           </div>
@@ -165,13 +194,7 @@ export default function Details() {
                     <li className="steps__item" key={i}>
                       <div className="steps__card">
                         <p className="steps__text">{text}</p>
-                        <div className="steps__actions">
-                          <button className="btn btn--ghost btn--compact">
-                            ⏱ Start 15 min timer
-                          </button>
-                          optional timestamp chip
-                          <span className="chip chip--mono">03:21</span>
-                        </div>
+                        <div className="steps__actions"></div>
                       </div>
                     </li>
                   ))}
@@ -182,6 +205,7 @@ export default function Details() {
             {detailsMode === "Ingredients" && (
               <footer className="recipe__actions">
                 <button className="action action--ghost" type="button">
+                  <Copy strokeWidth={2} />
                   Copy list
                 </button>
               </footer>
