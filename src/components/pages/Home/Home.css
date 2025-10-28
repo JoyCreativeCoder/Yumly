@@ -319,7 +319,7 @@ body,
 
   .chip {
     position: relative;
-    padding: 14px 22px; /* bigger */
+    padding: 14px 22px;
     border-radius: 999px;
     background: #1b2030;
     border: 1px solid #242a36;
