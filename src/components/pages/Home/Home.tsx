@@ -47,7 +47,6 @@ export default function Home() {
       console.error(err);
     } finally {
       setLoading(false);
-      // setQuery("");
     }
   };
 
