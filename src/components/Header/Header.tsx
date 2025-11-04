@@ -1,18 +1,16 @@
+import { Star } from "lucide-react";
 import "./Header.css";
 
 export default function Header() {
   return (
     <header className="header">
+      <img src="/images/yumly.svg" alt="Yumly logo" />
       <div className="header__spacer" />
-      <h1 className="title">Yumly</h1>
-
       <div className="actions">
-        <a
-          className="btn-feedback"
-          href="mailto:yumly.feedback@example.com?subject=Yumly%20Feedback&body=Tell%20us%20what%20you%20think%20👇"
-        >
+        <a className="btn-feedback" href="writejoy.n@gmail.com">
           Send feedback
         </a>
+        <Star color="#FF141B" strokeWidth={1.25} />
       </div>
     </header>
   );

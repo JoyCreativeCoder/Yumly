@@ -1,7 +1,8 @@
 import "./Home.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../Header/Header";
+import { Search } from "lucide-react";
 
 export default function Home() {
   const [mode, setMode] = useState("recipes");
@@ -9,8 +10,22 @@ export default function Home() {
   const [hint, setHint] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [meal, setMeal] = useState("");
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const date = new Date();
+    const hour = date.getHours();
+
+    if (hour >= 5 && hour < 12) {
+      setMeal("breakfast");
+    } else if (hour >= 12 && hour < 17) {
+      setMeal("lunch");
+    } else {
+      setMeal("dinner");
+    }
+  }, []);
 
   async function fetchRecipe(q: string) {
     const res = await fetch(
@@ -54,6 +69,7 @@ export default function Home() {
     <div className="home">
       <Header />
       <main className="home__content">
+        <h1 className="hero_text">What are you making for {meal}?</h1>
         <div className="mode-toggle" role="tablist" aria-label="Search mode">
           <button
             className={`btn btn--chip ${
@@ -75,38 +91,22 @@ export default function Home() {
           </button>
         </div>
 
-        {/* <div className="search">
-          <form className="search" onSubmit={handleSubmit}>
+        <form className="search__form" role="search" onSubmit={handleSubmit}>
+          <div className="input_container">
+            <Search color="#8f97a3" className="search_icon" size="20" />
             <input
-              className="search__input"
+              className="search__input search__input--lg"
               value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-              }}
-              type="search"
+              onChange={(e) => setQuery(e.target.value)}
               placeholder={
                 mode === "recipes"
-                  ? "Search specific recipes..."
-                  : "Search by ingredients..."
+                  ? "Search specific recipes…"
+                  : "Search by ingredients…"
               }
               aria-label="Search recipes"
             />
-          </form>
-        </div> */}
+          </div>
 
-        <form className="search__form" role="search" onSubmit={handleSubmit}>
-          <input
-            className="search__input search__input--lg"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            type="search"
-            placeholder={
-              mode === "recipes"
-                ? "Search specific recipes…"
-                : "Search by ingredients…"
-            }
-            aria-label="Search recipes"
-          />
           <button
             className="btn_getrecipe"
             type="submit"
@@ -116,24 +116,6 @@ export default function Home() {
             {loading ? <span className="spinner" aria-hidden /> : "Get Recipe"}
           </button>
         </form>
-
-        <ul className="chips" aria-label="Popular tags">
-          <li>
-            <button className="chip">Jollof</button>
-          </li>
-          <li>
-            <button className="chip">potato + egg</button>
-          </li>
-          <li>
-            <button className="chip">Pasta</button>
-          </li>
-          <li>
-            <button className="chip">Chicken</button>
-          </li>
-          <li>
-            <button className="chip">chicken, tomato, onion</button>
-          </li>
-        </ul>
       </main>
     </div>
   );
