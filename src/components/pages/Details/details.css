@@ -4,8 +4,8 @@
 
 /* Page */
 .recipe {
-  background: #0e1116;
-  color: #e6e7eb;
+  background: #ffffff;
+  color: #000000;
   max-width: 1200px;
   margin: 0 auto;
   padding: 24px;
@@ -26,22 +26,18 @@
   width: 44px;
   height: 44px;
   border-radius: 999px;
-  background: #151922; /* subtle surface */
-  border: 1px solid #242a36; /* faint outline */
+  background: #f2f2f7; /* subtle surface */
   color: #e6e7eb; /* icon inherits this */
   cursor: pointer;
   transition: background 0.25s, transform 0.2s, color 0.25s;
 }
 
 .go-back:hover {
-  background: #1d2230;
-  color: #ffc562;
   transform: translateY(-2px);
 }
 
 .go-back:active {
   transform: scale(0.95);
-  background: #11141c;
 }
 
 .go-back svg {
