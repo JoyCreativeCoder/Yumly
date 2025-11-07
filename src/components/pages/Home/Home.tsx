@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../Header/Header";
 import { Search } from "lucide-react";
+import Footer from "@/components/Footer/Footer";
 
 export default function Home() {
   const [mode, setMode] = useState("recipes");
@@ -11,6 +12,7 @@ export default function Home() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [meal, setMeal] = useState("");
+  const [recipe, setRecipe] = useState<any>(null);
 
   const navigate = useNavigate();
 
@@ -27,6 +29,7 @@ export default function Home() {
     }
   }, []);
 
+  // Fetch recipe (same as before)
   async function fetchRecipe(q: string) {
     const res = await fetch(
       "/api/recipes/search?query=" + encodeURIComponent(q)
@@ -37,27 +40,25 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("submitted");
     const q = query.trim();
-
     if (!q) {
       setError("Type something");
       return;
     }
+
     setError("");
     setLoading(true);
     setHint("");
 
     try {
       const data = await fetchRecipe(q);
-      if (data.id) {
-        navigate("/recipe/" + data.id);
-        console.log(data);
+      if (data?.title) {
+        // ✅ navigate to the recipe page with data
+        navigate("/recipe", { state: { recipe: data } });
       } else {
-        setHint(data.hint || "No result found. Try a simpler term.");
-        console.log(data.hint);
+        setHint(data?.hint || "No result found. Try a simpler term.");
       }
-    } catch (err: any) {
+    } catch (err) {
       setError("Something went wrong. Please try again.");
       console.error(err);
     } finally {
