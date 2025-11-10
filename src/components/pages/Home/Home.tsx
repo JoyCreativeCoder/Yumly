@@ -29,11 +29,13 @@ export default function Home() {
     }
   }, []);
 
-  // Fetch recipe (same as before)
   async function fetchRecipe(q: string) {
-    const res = await fetch(
-      "/api/recipes/search?query=" + encodeURIComponent(q)
-    );
+    const res = await fetch("/api/recipes/search", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: q }),
+    });
+
     if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
     return res.json();
   }
@@ -52,8 +54,7 @@ export default function Home() {
 
     try {
       const data = await fetchRecipe(q);
-      if (data?.title) {
-        // ✅ navigate to the recipe page with data
+      if (data?.title || data?.name) {
         navigate("/recipe", { state: { recipe: data } });
       } else {
         setHint(data?.hint || "No result found. Try a simpler term.");

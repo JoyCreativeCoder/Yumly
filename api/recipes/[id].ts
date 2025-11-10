@@ -82,56 +82,44 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
+    // 1️⃣ Get the recipe "id" from the URL (actually the recipe title)
     const id = String(req.query.id ?? "").trim();
     if (!id) return res.status(400).json({ error: "Missing recipe ID" });
 
-    const googleKey = process.env.GOOGLE_API_KEY;
-    const cx = process.env.GOOGLE_CX;
-    const openaiKey = process.env.OPENAI_API_KEY;
+    const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+    const GOOGLE_CX = process.env.GOOGLE_CX_ID;
+    const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
-    if (!googleKey || !cx) {
+    if (!GOOGLE_API_KEY || !GOOGLE_CX)
       return res.status(500).json({ error: "Missing Google API credentials" });
-    }
 
-    // 1️⃣ --- Google Search for Recipe ---
-    const formattedId = id.replace(/-/g, " ");
+    // 2️⃣ Format the recipe title (replace dashes with spaces)
+    const formattedTitle = id.replace(/-/g, " ");
+
+    // 3️⃣ Fetch image from Google Custom Search
     const searchUrl = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(
-      formattedId + " recipe"
-    )}&cx=${cx}&key=${googleKey}`;
+      formattedTitle
+    )}&cx=${GOOGLE_CX}&key=${GOOGLE_API_KEY}&searchType=image&num=1`;
 
     const googleRes = await fetch(searchUrl);
-    if (!googleRes.ok) throw new Error("Failed to fetch from Google API");
+    if (!googleRes.ok) throw new Error("Failed to fetch image from Google API");
 
     const googleData = await googleRes.json();
-    const firstResult = googleData.items?.[0];
+    const imageUrl = googleData.items?.[0]?.link || null;
 
-    if (!firstResult)
-      return res.status(404).json({ error: "No recipe found for this title" });
+    // 4️⃣ Fetch recipe details from OpenAI
+    let ingredients: string[] = [];
+    let steps: string[] = [];
 
-    // 2️⃣ --- Basic Data from Google ---
-    const recipe = {
-      id,
-      title: firstResult.title || formattedId,
-      image: firstResult.pagemap?.cse_image?.[0]?.src || null,
-      link: firstResult.link,
-      snippet: firstResult.snippet,
-      servings: null,
-      readyInMinutes: null,
-      calories: null,
-      ingredients: [] as string[],
-      steps: [] as string[],
-    };
-
-    // 3️⃣ --- Enhance with OpenAI ---
-    if (openaiKey) {
+    if (OPENAI_API_KEY) {
       try {
-        const openAIResponse = await fetch(
+        const openAIRes = await fetch(
           "https://api.openai.com/v1/chat/completions",
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${openaiKey}`,
+              Authorization: `Bearer ${OPENAI_API_KEY}`,
             },
             body: JSON.stringify({
               model: "gpt-4o-mini",
@@ -139,35 +127,39 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                 {
                   role: "system",
                   content:
-                    "You are a recipe extractor. Given a recipe title or snippet, return structured recipe details as valid JSON: {ingredients: string[], steps: string[]}.",
+                    "You are a recipe extractor. Return structured recipe details in JSON: {ingredients: string[], steps: string[]} based on the title.",
                 },
-                { role: "user", content: recipe.snippet || recipe.title },
+                { role: "user", content: formattedTitle },
               ],
             }),
           }
         );
 
-        const aiJson = await openAIResponse.json();
-        const raw = aiJson?.choices?.[0]?.message?.content || "{}";
+        const openAIData = await openAIRes.json();
+        const raw = openAIData?.choices?.[0]?.message?.content || "{}";
+        const parsed = JSON.parse(raw);
 
-        let parsedData = { ingredients: [], steps: [] };
-        try {
-          parsedData = JSON.parse(raw);
-        } catch {
-          console.warn("OpenAI returned non-JSON content:", raw);
-        }
-
-        recipe.ingredients = parsedData.ingredients || [];
-        recipe.steps = parsedData.steps || [];
+        ingredients = Array.isArray(parsed.ingredients)
+          ? parsed.ingredients
+          : [];
+        steps = Array.isArray(parsed.steps) ? parsed.steps : [];
       } catch (err) {
-        console.error("OpenAI parse error:", err);
+        console.warn("OpenAI parse error:", err);
       }
     }
 
-    // ✅ --- Return final structured recipe ---
+    // 5️⃣ Return final structured recipe
+    const recipe = {
+      id,
+      title: formattedTitle,
+      image: imageUrl,
+      ingredients,
+      steps,
+    };
+
     return res.status(200).json(recipe);
-  } catch (e: any) {
-    console.error("Recipe details error:", e);
-    return res.status(500).json({ error: e.message || "Server error" });
+  } catch (err: any) {
+    console.error("Recipe details error:", err);
+    return res.status(500).json({ error: err.message || "Server error" });
   }
 }

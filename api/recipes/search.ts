@@ -1,5 +1,7 @@
 // import type { VercelRequest, VercelResponse } from "@vercel/node";
 
+import { VercelRequest, VercelResponse } from "@vercel/node";
+
 // function pickCalories(nutrition?: {
 //   nutrients?: Array<{ name: string; amount: number }>;
 // }) {
@@ -104,81 +106,145 @@
 // }
 
 //NEW>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>NEW>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-import type { VercelRequest, VercelResponse } from "@vercel/node";
+// import type { VercelRequest, VercelResponse } from "@vercel/node";
+
+// export default async function handler(req: VercelRequest, res: VercelResponse) {
+//   try {
+//     const q = String(req.query.query || "").trim();
+//     if (!q) return res.status(400).json({ error: "Missing query" });
+
+//     const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+//     const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+//     const GOOGLE_CX_ID = process.env.GOOGLE_CX_ID;
+
+//     if (!OPENAI_API_KEY || !GOOGLE_API_KEY || !GOOGLE_CX_ID) {
+//       return res.status(500).json({ error: "Missing API keys in environment" });
+//     }
+//     const aiResponse = await fetch(
+//       "https://api.openai.com/v1/chat/completions",
+//       {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${OPENAI_API_KEY}`,
+//         },
+//         body: JSON.stringify({
+//           model: "gpt-4o-mini",
+//           messages: [
+//             {
+//               role: "system",
+//               content:
+//                 "You are a helpful recipe assistant. Always respond with valid JSON. Include: title, servings (number), readyInMinutes (number), calories (number), ingredients (array of strings), and steps (array of strings).",
+//             },
+//             {
+//               role: "user",
+//               content: `Generate a detailed recipe for "${q}".`,
+//             },
+//           ],
+//         }),
+//       }
+//     );
+
+//     const aiData = await aiResponse.json();
+//     const content = aiData?.choices?.[0]?.message?.content || "{}";
+
+//     let recipe: any = {};
+//     try {
+//       recipe = JSON.parse(content);
+//     } catch {
+//       recipe = {
+//         title: q,
+//         ingredients: [],
+//         steps: [],
+//         servings: null,
+//         readyInMinutes: null,
+//         calories: null,
+//       };
+//     }
+
+//     const googleUrl = `https://www.googleapis.com/customsearch/v1?key=${GOOGLE_API_KEY}&cx=${GOOGLE_CX_ID}&searchType=image&q=${encodeURIComponent(
+//       recipe.title || q
+//     )}`;
+
+//     const googleRes = await fetch(googleUrl);
+//     const googleData = await googleRes.json();
+//     const image = googleData.items?.[0]?.link || null;
+
+//     return res.status(200).json({
+//       title: recipe.title || q,
+//       servings: recipe.servings || null,
+//       readyInMinutes: recipe.readyInMinutes || null,
+//       calories: recipe.calories || null,
+//       ingredients: recipe.ingredients || [],
+//       steps: recipe.steps || [],
+//       image,
+//     });
+//   } catch (err: any) {
+//     console.error("Recipe API error:", err);
+//     return res.status(500).json({ error: err.message || "Server error" });
+//   }
+// }
+
+// api/search.ts
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  console.log("Incoming query:", req.query.query);
-
   try {
-    const q = String(req.query.query || "").trim();
-    if (!q) return res.status(400).json({ error: "Missing query" });
+    if (req.method !== "POST")
+      return res.status(405).json({ error: "Only POST requests allowed" });
 
-    const openaiKey = process.env.OPENAI_API_KEY;
-    const googleKey = process.env.GOOGLE_API_KEY;
-    const cx = process.env.GOOGLE_CX_ID;
+    const { query } = req.body;
+    if (!query) return res.status(400).json({ error: "Missing query" });
 
-    if (!openaiKey || !googleKey || !cx) {
-      return res.status(500).json({ error: "Missing API keys in environment" });
+    if (!process.env.OPENAI_API_KEY) {
+      console.error("OPENAI_API_KEY is missing!");
+      return res.status(500).json({ error: "Missing OpenAI API key" });
     }
 
-    // 1️⃣ --- Generate recipe info with OpenAI ---
-    const aiResponse = await fetch(
-      "https://api.openai.com/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${openaiKey}`,
-        },
-        body: JSON.stringify({
-          model: "gpt-4o-mini",
-          messages: [
-            {
-              role: "system",
-              content:
-                "You are a helpful recipe assistant. Always respond with valid JSON. Include title, servings, readyInMinutes, calories, ingredients (array), and instructions (string).",
-            },
-            {
-              role: "user",
-              content: `Generate a detailed recipe for "${q}".`,
-            },
-          ],
-        }),
-      }
-    );
+    console.log("Query received:", query);
 
-    const aiData = await aiResponse.json();
-    const content = aiData?.choices?.[0]?.message?.content || "{}";
-
-    let recipe: any;
-    try {
-      recipe = JSON.parse(content);
-    } catch {
-      recipe = { title: q, instructions: content };
-    }
-
-    // 2️⃣ --- Fetch image from Google Custom Search ---
-    const imageUrl = `https://www.googleapis.com/customsearch/v1?key=${googleKey}&cx=${cx}&searchType=image&q=${encodeURIComponent(
-      recipe.title || q
-    )}`;
-
-    const imgRes = await fetch(imageUrl);
-    const imgData = await imgRes.json();
-    const image = imgData.items?.[0]?.link || null;
-
-    // 3️⃣ --- Return unified response ---
-    return res.status(200).json({
-      id: recipe.title?.toLowerCase().replace(/\s+/g, "-") || q.toLowerCase(),
-      title: recipe.title || q,
-      servings: recipe.servings || null,
-      readyInMinutes: recipe.readyInMinutes || null,
-      calories: recipe.calories || null,
-      image,
-      ingredients: recipe.ingredients || [],
-      instructions: recipe.instructions || "",
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [
+          { role: "system", content: "You are a helpful cooking assistant." },
+          {
+            role: "user",
+            content: `Give me a recipe for ${query} in JSON format with ingredients, directions, calories, and servings.`,
+          },
+        ],
+        temperature: 0.3,
+      }),
     });
-  } catch (e: any) {
-    console.error("Search API error:", e);
-    return res.status(500).json({ error: e?.message || "Server error" });
+
+    const data = await response.json();
+    console.log("OpenAI raw response:", data);
+
+    const text = data?.choices?.[0]?.message?.content;
+
+    if (!text)
+      return res.status(500).json({ error: "No response from OpenAI" });
+
+    let recipe;
+    try {
+      recipe = JSON.parse(text);
+    } catch (err) {
+      console.error("JSON parse error:", err, "Text:", text);
+      const match = text.match(/\{[\s\S]*\}/);
+      if (match) recipe = JSON.parse(match[0]);
+      else
+        return res
+          .status(500)
+          .json({ error: "Could not parse OpenAI response" });
+    }
+
+    res.status(200).json(recipe);
+  } catch (err: any) {
+    console.error("Serverless function error:", err);
+    res.status(500).json({ error: err.message || "Internal server error" });
   }
 }
