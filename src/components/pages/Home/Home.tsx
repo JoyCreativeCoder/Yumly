@@ -30,11 +30,14 @@ export default function Home() {
   }, []);
 
   async function fetchRecipe(q: string) {
-    const res = await fetch("/api/recipes/search", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: q }),
-    });
+    const res = await fetch(
+      "https://yumly-gray.vercel.app/api/recipes/search",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: q }),
+      }
+    );
 
     if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
     return res.json();
