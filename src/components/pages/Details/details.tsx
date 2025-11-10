@@ -159,14 +159,15 @@ export default function Details() {
             </section>
           )}
 
-          {detailsMode === "Ingredients" && data.ingredients?.length > 0 && (
-            <footer className="recipe__actions">
-              <button className="action action--ghost" type="button">
-                <Copy strokeWidth={2} />
-                Copy list
-              </button>
-            </footer>
-          )}
+          {detailsMode === "Ingredients" &&
+            (data.ingredients?.length ?? 0) > 0 && (
+              <footer className="recipe__actions">
+                <button className="action action--ghost" type="button">
+                  <Copy strokeWidth={2} />
+                  Copy list
+                </button>
+              </footer>
+            )}
         </div>
       </div>
     </main>
