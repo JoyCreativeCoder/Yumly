@@ -43,6 +43,8 @@ const RECIPE_SCHEMA: Schema = {
 // It automatically picks up GEMINI_API_KEY from environment variables
 const ai = new GoogleGenAI({});
 
+const GOOGLE_SEARCH_API_KEY = process.env.GEMINI_API_KEY;
+const GOOGLE_CX_ID = process.env.GOOGLE_CX_ID;
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // CORS Headers (Good job keeping these)
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -93,9 +95,41 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         .json({ error: "Could not parse structured recipe output." });
     }
 
+    let imageUrl: string | null = null;
+    const recipeTitle = recipe.title;
+
+    if (GOOGLE_SEARCH_API_KEY && GOOGLE_CX_ID && recipeTitle) {
+      try {
+        const searchUrl =
+          `https://www.googleapis.com/customsearch/v1?` +
+          `key=${GOOGLE_SEARCH_API_KEY}&` +
+          `cx=${GOOGLE_CX_ID}&` +
+          `q=delicious photo of ${encodeURIComponent(recipeTitle)}&` +
+          `searchType=image&` +
+          `num=1`;
+
+        const imageResponse = await fetch(searchUrl);
+        const searchData = await imageResponse.json();
+
+        if (searchData.items && searchData.items.length > 0) {
+          imageUrl = searchData.items[0].link;
+        }
+      } catch (error) {
+        // Log image search error, but don't crash the whole function
+        console.error("Image search failed, continuing without image:", error);
+      }
+    } else {
+      console.warn("Skipping image search: Missing API keys or recipe title.");
+    }
+
+    const finalRecipeData = {
+      ...recipe,
+      imageUrl: imageUrl,
+    };
+
     // 5. Success
     // No need for default value checks (||=) as the schema forces these fields to be present.
-    res.status(200).json(recipe);
+    res.status(200).json(finalRecipeData);
   } catch (err: any) {
     console.error("Serverless function error:", err);
     res.status(500).json({ error: err.message || "Internal server error" });

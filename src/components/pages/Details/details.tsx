@@ -10,9 +10,7 @@ type Recipe = {
   calories: number | null;
   ingredients: string[];
   steps: string[];
-  // These fields are not provided by your current Gemini schema,
-  // but we keep them here for display compatibility if you add them later.
-  image?: string;
+  imageUrl?: string;
   readyInMinutes?: number | null;
 };
 
@@ -26,10 +24,14 @@ export default function Details() {
         title: recipeFromState.title || "Generated Recipe",
         servings: recipeFromState.servings || null,
         calories: recipeFromState.calories || null,
-        ingredients: recipeFromState.calories || [],
-        steps: recipeFromState.steps || [],
-        readyInMinutes: null,
-        image: undefined,
+        ingredients: Array.isArray(recipeFromState.ingredients)
+          ? recipeFromState.ingredients
+          : [],
+        steps: Array.isArray(recipeFromState.steps)
+          ? recipeFromState.steps
+          : [],
+        readyInMinutes: recipeFromState.readyInMinutes || null,
+        imageUrl: recipeFromState.imageUrl,
       }
     : null;
 
@@ -62,9 +64,9 @@ export default function Details() {
       <Header1 title={data.title} />
       <div className="container">
         <div className="food-hero">
-          {data.image ? (
+          {data.imageUrl ? (
             <img
-              src={data.image}
+              src={data.imageUrl}
               decoding="async"
               alt={data.title ? `${data.title} — plated` : "Recipe image"}
               loading="lazy"
