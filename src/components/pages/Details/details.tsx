@@ -6,30 +6,30 @@ import { Header1 } from "@/components/Header/Header";
 
 type Recipe = {
   title: string;
+  servings: number | null;
+  calories: number | null;
+  ingredients: string[];
+  steps: string[];
+  // These fields are not provided by your current Gemini schema,
+  // but we keep them here for display compatibility if you add them later.
   image?: string;
-  servings?: number | null;
   readyInMinutes?: number | null;
-  calories?: number | null;
-  ingredients?: string[];
-  steps?: string[];
 };
 
 export default function Details() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Normalize OpenAI response fields
   const recipeFromState = location.state?.recipe;
   const normalizedRecipe: Recipe | null = recipeFromState
     ? {
-        title: recipeFromState.title || recipeFromState.name || "Recipe",
-        image: recipeFromState.image || "",
+        title: recipeFromState.title || "Generated Recipe",
         servings: recipeFromState.servings || null,
-        readyInMinutes: recipeFromState.readyInMinutes || null,
         calories: recipeFromState.calories || null,
-        ingredients:
-          recipeFromState.ingredients || recipeFromState.ingredientsList || [],
-        steps: recipeFromState.steps || recipeFromState.directions || [],
+        ingredients: recipeFromState.calories || [],
+        steps: recipeFromState.steps || [],
+        readyInMinutes: null,
+        image: undefined,
       }
     : null;
 
@@ -48,11 +48,11 @@ export default function Details() {
   };
 
   useEffect(() => {
-    if (data) return;
-
-    // Optional: fetch a default recipe or show error
-    setError("No recipe data available. Go back and search again.");
-  }, [data]);
+    // Check if the component was loaded without any recipe data
+    if (!data) {
+      setError("No recipe data available. Go back and search again.");
+    }
+  }, []);
 
   if (error) return <p>{error}</p>;
   if (!data) return <p>Loading recipe...</p>;

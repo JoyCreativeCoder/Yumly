@@ -57,7 +57,6 @@ export default function Home() {
 
     try {
       const data = await fetchRecipe(q);
-
       // Validate that the recipe has minimal required fields
       const valid =
         data &&
