@@ -36,7 +36,10 @@ export default function Home() {
       body: JSON.stringify({ query: q }),
     });
 
-    if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+    if (!res.ok) {
+      const errBody = await res.text();
+      throw new Error(`HTTP error! Status: ${res.status}, Body: ${errBody}`);
+    }
     return res.json();
   }
 
@@ -55,11 +58,16 @@ export default function Home() {
     try {
       const data = await fetchRecipe(q);
 
-      if (
-        data?.title &&
+      // Validate that the recipe has minimal required fields
+      const valid =
+        data &&
+        typeof data.title === "string" &&
         Array.isArray(data.ingredients) &&
-        Array.isArray(data.steps)
-      ) {
+        Array.isArray(data.steps) &&
+        typeof data.servings === "number" &&
+        typeof data.calories === "number";
+
+      if (valid) {
         navigate("/recipe", { state: { recipe: data } });
       } else {
         setHint("No recipe found or invalid format. Try a simpler term.");
