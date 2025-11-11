@@ -30,14 +30,11 @@ export default function Home() {
   }, []);
 
   async function fetchRecipe(q: string) {
-    const res = await fetch(
-      "https://yumly-gray.vercel.app/api/recipes/search",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: q }),
-      }
-    );
+    const res = await fetch("/api/recipes/search", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: q }),
+    });
 
     if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
     return res.json();
@@ -57,10 +54,16 @@ export default function Home() {
 
     try {
       const data = await fetchRecipe(q);
-      if (data?.title || data?.name) {
+
+      if (
+        data?.title &&
+        Array.isArray(data.ingredients) &&
+        Array.isArray(data.steps)
+      ) {
         navigate("/recipe", { state: { recipe: data } });
       } else {
-        setHint(data?.hint || "No result found. Try a simpler term.");
+        setHint("No recipe found or invalid format. Try a simpler term.");
+        console.warn("Invalid recipe data:", data);
       }
     } catch (err) {
       setError("Something went wrong. Please try again.");
