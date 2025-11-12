@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { AlarmClock, Copy, Flame, Utensils } from "lucide-react";
 import { Header1 } from "@/components/Header/Header";
+import { CopyButton, Button } from "@mantine/core";
 
 type Recipe = {
   title: string;
@@ -16,7 +17,8 @@ type Recipe = {
 
 export default function Details() {
   const location = useLocation();
-  const navigate = useNavigate();
+  const [showCopied, setShowCopied] = useState(false);
+
   const fallBackImage = "/images/ofada.jpeg";
 
   const recipeFromState = location.state?.recipe; //we are getting the recipe data from the navigation
@@ -42,11 +44,20 @@ export default function Details() {
   );
   const [error, setError] = useState<string | null>(null);
 
-  const goback = () => {
-    if (window.history.length > 1) {
-      navigate(-1);
-    } else {
-      navigate("/", { replace: true });
+  const copyIngredients = async () => {
+    if (!data || data.ingredients.length === 0) {
+      console.warn("No ingredients to copy.");
+      return;
+    }
+
+    const listString = data.ingredients.join("\n");
+    try {
+      await navigator.clipboard.writeText(listString);
+      setShowCopied(true);
+      setTimeout(() => setShowCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy text: ", err);
+      alert("Could not copy list. Please try manually.");
     }
   };
 
@@ -153,7 +164,7 @@ export default function Details() {
                 <li className="steps__item" key={i}>
                   <div className="steps__card">
                     <div className="step-header">
-                      <h1>step 1</h1>
+                      <h1>step {i + 1}</h1>
                     </div>
                     <p className="steps__text">{step}</p>
                   </div>
@@ -165,10 +176,15 @@ export default function Details() {
           {detailsMode === "Ingredients" &&
             (data.ingredients?.length ?? 0) > 0 && (
               <footer className="recipe__actions">
-                <button className="action" type="button">
+                <button
+                  className="action"
+                  type="button"
+                  onClick={copyIngredients}
+                >
                   <Copy strokeWidth={2} />
                   Copy list
                 </button>
+                {showCopied && <div className="copied-popup">Copied !</div>}
               </footer>
             )}
         </div>

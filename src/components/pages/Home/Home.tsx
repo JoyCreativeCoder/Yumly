@@ -2,6 +2,7 @@ import "./Home.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../Header/Header";
+import Modal from "../../Modal/modal";
 import { Search } from "lucide-react";
 import Footer from "@/components/Footer/Footer";
 
@@ -11,6 +12,7 @@ export default function Home() {
   const [hint, setHint] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [meal, setMeal] = useState("");
 
   const navigate = useNavigate();
@@ -52,6 +54,7 @@ export default function Home() {
 
     setError("");
     setLoading(true);
+    setShowModal(true);
     setHint("");
 
     try {
@@ -65,6 +68,7 @@ export default function Home() {
         typeof data.calories === "number";
 
       if (valid) {
+        setShowModal(false);
         navigate("/recipe", { state: { recipe: data } });
       } else {
         setHint("No recipe found or invalid format. Try a simpler term.");
@@ -81,6 +85,7 @@ export default function Home() {
   return (
     <div className="home">
       <Header />
+      {showModal && <Modal onCancel={() => setShowModal(false)} />}
       <main className="home__content">
         <h1 className="hero_text">What are you making for {meal}?</h1>
         <div className="mode-toggle" role="tablist" aria-label="Search mode">

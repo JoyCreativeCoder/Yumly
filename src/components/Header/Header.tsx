@@ -1,5 +1,6 @@
-import { Star } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import "./Header.css";
+import { useNavigate } from "react-router-dom";
 
 type Header1Props = {
   title?: string;
@@ -14,21 +15,39 @@ export default function Header() {
         <a className="btn-feedback" href="mailto:writejoy.n@gmail.com">
           Send feedback
         </a>
-
-        <Star color="#FF141B" strokeWidth={1.25} className="favorite" />
       </div>
     </header>
   );
 }
 
 export function Header1({ title }: Header1Props) {
+  const navigate = useNavigate();
+
+  const goback = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate("/", { replace: true });
+    }
+  };
+
   return (
-    <header className="header">
-      {title ? (
-        <h1>{title}</h1>
-      ) : (
-        <img src="/images/yumly.svg" alt="Yumly logo" className="logo" />
-      )}
+    <header className="header-one">
+      <div className="header-one-container">
+        <button className="go-back" onClick={goback}>
+          <ArrowLeft />
+        </button>
+        {title ? (
+          <h1>{title}</h1>
+        ) : (
+          <img src="/images/yumly.svg" alt="Yumly logo" className="logo" />
+        )}
+        <div className="actions">
+          <a className="btn-feedback" href="mailto:writejoy.n@gmail.com">
+            Send feedback
+          </a>
+        </div>
+      </div>
     </header>
   );
 }
