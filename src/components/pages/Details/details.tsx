@@ -17,8 +17,9 @@ type Recipe = {
 export default function Details() {
   const location = useLocation();
   const navigate = useNavigate();
+  const fallBackImage = "/images/ofada.jpeg";
 
-  const recipeFromState = location.state?.recipe;
+  const recipeFromState = location.state?.recipe; //we are getting the recipe data from the navigation
   const normalizedRecipe: Recipe | null = recipeFromState
     ? {
         title: recipeFromState.title || "Generated Recipe",
@@ -31,7 +32,7 @@ export default function Details() {
           ? recipeFromState.steps
           : [],
         readyInMinutes: recipeFromState.readyInMinutes || null,
-        imageUrl: recipeFromState.imageUrl,
+        imageUrl: recipeFromState.imageUrl || fallBackImage,
       }
     : null;
 
@@ -50,7 +51,6 @@ export default function Details() {
   };
 
   useEffect(() => {
-    // Check if the component was loaded without any recipe data
     if (!data) {
       setError("No recipe data available. Go back and search again.");
     }
@@ -129,18 +129,18 @@ export default function Details() {
           </div>
 
           {detailsMode === "Ingredients" && (
-            <section className="recipe__panel">
+            <section className="ingedient__panel">
               <ul className="ingredients" role="list">
                 {(data.ingredients ?? []).map((ingredient, i) => (
                   <li className="ingredients__item" key={i}>
+                    <label htmlFor={`ing-${i}`}>
+                      <span className="ingredients__name">{ingredient}</span>
+                    </label>
                     <input
                       className="ingredients__check"
                       type="checkbox"
                       id={`ing-${i}`}
                     />
-                    <label htmlFor={`ing-${i}`}>
-                      <span className="ingredients__name">{ingredient}</span>
-                    </label>
                   </li>
                 ))}
               </ul>
@@ -148,23 +148,24 @@ export default function Details() {
           )}
 
           {detailsMode === "Directions" && (
-            <section className="recipe__panel">
-              <ol className="steps" role="list">
-                {(data.steps ?? []).map((step, i) => (
-                  <li className="steps__item" key={i}>
-                    <div className="steps__card">
-                      <p className="steps__text">{step}</p>
+            <section className="direction__panel">
+              {(data.steps ?? []).map((step, i) => (
+                <li className="steps__item" key={i}>
+                  <div className="steps__card">
+                    <div className="step-header">
+                      <h1>step 1</h1>
                     </div>
-                  </li>
-                ))}
-              </ol>
+                    <p className="steps__text">{step}</p>
+                  </div>
+                </li>
+              ))}
             </section>
           )}
 
           {detailsMode === "Ingredients" &&
             (data.ingredients?.length ?? 0) > 0 && (
               <footer className="recipe__actions">
-                <button className="action action--ghost" type="button">
+                <button className="action" type="button">
                   <Copy strokeWidth={2} />
                   Copy list
                 </button>
