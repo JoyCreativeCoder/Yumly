@@ -12,7 +12,6 @@ export default function Home() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [meal, setMeal] = useState("");
-  const [recipe, setRecipe] = useState<any>(null);
 
   const navigate = useNavigate();
 
@@ -57,7 +56,6 @@ export default function Home() {
 
     try {
       const data = await fetchRecipe(q);
-      // Validate that the recipe has minimal required fields
       const valid =
         data &&
         typeof data.title === "string" &&

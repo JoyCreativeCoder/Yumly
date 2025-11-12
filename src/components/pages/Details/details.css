@@ -16,6 +16,7 @@
   width: 100%;
   margin: 0 auto;
   padding: 0 16px;
+  margin-bottom: 5%;
 }
 
 .go-back {
@@ -90,7 +91,7 @@
   align-items: flex-start;
   justify-content: center;
   align-items: center;
-  /* background: #ffe7de; */
+  background: #ff5b003b;
   border-radius: 16px;
   display: flex;
   gap: 16px;
@@ -122,8 +123,7 @@
 }
 
 .chip:hover {
-  background: #fd6632;
-  color: #fff;
+  /* color: #ebeaea; */
 }
 
 .recipe__tabs {
@@ -158,4 +158,113 @@
 .tabs__btn--active {
   background: #fff;
   color: #2b2b2b;
+}
+
+.recipe__bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ingedient__panel {
+  align-items: flex-start;
+  align-self: stretch;
+  background: #fff;
+  border-radius: 24px;
+  padding: 8px;
+}
+
+.ingedient__panel,
+.ingredients {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.ingredients {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ingredients__item {
+  align-items: center;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  min-height: 48px;
+  padding: 8px 16px;
+  position: relative;
+}
+
+.ingredients__name {
+  font-size: 1.1rem;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: -0.48px;
+  line-height: 124%;
+  text-decoration: none;
+}
+
+.ingredients__check {
+  /* appearance: none; */
+  /* -webkit-appearance: none; */
+  width: 24px;
+  height: 24px;
+}
+
+.action {
+  border: none;
+  background: #fd6632;
+  color: #2b2b2b;
+  font-weight: 600;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.direction__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+}
+
+.step-header {
+  align-self: stretch;
+  border-bottom: 0.5px solid #0000004d;
+  border-radius: 24px 24px 0 0;
+  gap: 8px;
+  padding: 16px;
+  color: #2b2b2b;
+  font-size: 16px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.steps__card {
+  align-self: center;
+  background: #fff;
+  border-radius: 24px;
+  box-sizing: border-box;
+  height: 55svh;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.steps__text {
+  padding: 16px;
+  text-align: left;
+  font-size: 36px;
+  font-weight: 500;
+  word-break: break-word;
+  letter-spacing: -1.08px;
+}
+
+.steps__item {
+  list-style: none;
 }

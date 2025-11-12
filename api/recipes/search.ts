@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 // Import the new SDK components
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 
-// 1. Define the Schema for guaranteed JSON structure
+// 1. This Defines the Schema for guaranteed JSON structure(it heleps us to ensure that our ai returns response in the exact specified structure)
 const RECIPE_SCHEMA: Schema = {
   type: Type.OBJECT,
   properties: {
@@ -39,18 +39,16 @@ const RECIPE_SCHEMA: Schema = {
   required: ["title", "ingredients", "steps", "servings"],
 };
 
-// Initialize the SDK outside the handler for better performance
-// It automatically picks up GEMINI_API_KEY from environment variables
-const ai = new GoogleGenAI({});
+const ai = new GoogleGenAI({}); // this is the client that will communicate with Gemini API(we can get access to diffrent functionality)
 
 const GOOGLE_SEARCH_API_KEY = process.env.GEMINI_API_KEY;
 const GOOGLE_CX_ID = process.env.GOOGLE_CX_ID;
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // CORS Headers (Good job keeping these)
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
+  // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "POST")
     return res.status(405).json({ error: "Only POST requests allowed" });
@@ -60,40 +58,34 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (!process.env.GEMINI_API_KEY)
     return res.status(500).json({ error: "Missing Gemini API key" });
 
-  console.log("GEMINI_API_KEY loaded?", !!process.env.GEMINI_API_KEY);
-
   try {
-    // 2. Simple, direct prompt
     const prompt = `Generate a complete recipe for "${query}". You are a professional chef. Ensure you include the total preparation and cooking time in minutes.`;
 
-    // 3. Use generateContent with Structured Output Configuration
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash", // The powerful, fast, and modern model
+      model: "gemini-2.5-flash",
       contents: prompt,
       config: {
-        // CRITICAL FIX: Forces the output to be valid JSON
         responseMimeType: "application/json",
-        // CRITICAL FIX: Enforces the structure defined above
         responseSchema: RECIPE_SCHEMA,
         temperature: 0.5,
       },
     });
 
-    // 4. Clean and Parse the JSON
-    // The response.text is guaranteed to be a JSON string that matches the schema
+    console.log("GEMINI_RES", response);
+
     const rawText = response.text.trim();
 
-    // Safely parse the JSON
     let recipe;
     try {
       recipe = JSON.parse(rawText);
     } catch (parseError) {
       console.error("JSON Parsing Error:", parseError);
-      // In case of a rare parsing issue, we return a 500
       return res
         .status(500)
         .json({ error: "Could not parse structured recipe output." });
     }
+
+    // >>>>>>>>>>>>>>>>>>>>Getting recipe image from google<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
     let imageUrl: string | null = null;
     const recipeTitle = recipe.title;
@@ -115,7 +107,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           imageUrl = searchData.items[0].link;
         }
       } catch (error) {
-        // Log image search error, but don't crash the whole function
         console.error("Image search failed, continuing without image:", error);
       }
     } else {
@@ -127,8 +118,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       imageUrl: imageUrl,
     };
 
-    // 5. Success
-    // No need for default value checks (||=) as the schema forces these fields to be present.
     res.status(200).json(finalRecipeData);
   } catch (err: any) {
     console.error("Serverless function error:", err);
