@@ -293,8 +293,6 @@
   list-style: none;
 }
 
-/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
-
 .ingredients__check {
   appearance: none;
   width: 24px;
@@ -317,7 +315,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -55%);
-  color: white;
+  color: #ffb186;
   font-size: 13px;
   font-weight: bold;
 }

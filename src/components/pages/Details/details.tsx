@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { AlarmClock, Copy, Flame, Utensils } from "lucide-react";
 import { Header1 } from "@/components/Header/Header";
-import { CopyButton, Button } from "@mantine/core";
 
 type Recipe = {
   title: string;

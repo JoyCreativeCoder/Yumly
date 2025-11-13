@@ -131,7 +131,7 @@ export default function Home() {
             disabled={!query.trim() || loading}
             aria-busy={loading}
           >
-            {loading ? <span className="spinner" aria-hidden /> : "Get Recipe"}
+            Get Recipe
           </button>
         </form>
       </main>
