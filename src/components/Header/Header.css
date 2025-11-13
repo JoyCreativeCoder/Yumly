@@ -1,76 +1,53 @@
-.header {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  width: 100%;
-  display: flex;
-  justify-content: flex-start;
-  justify-content: space-around;
-  gap: 12px;
-  align-items: center;
-  padding: 14px clamp(12px, 3vw, 22px);
-  background: #ffffff;
-  border-bottom: 0.25px solid #00000033;
-}
-
+.header,
 .header-one {
   position: sticky;
   top: 0;
+  z-index: 50;
+  width: 100%;
   display: flex;
-  justify-content: center;
   align-items: center;
-  align-self: stretch;
   background: #ffffff;
   border-bottom: 0.25px solid #00000033;
-  width: 100%;
-  z-index: 50;
   padding: 14px clamp(12px, 3vw, 22px);
+}
+
+.header {
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.header-one {
+  justify-content: center;
 }
 
 .header-one-container {
   height: 40px;
-  justify-content: space-between;
   max-width: 640px;
-  position: relative;
   width: 100%;
-  align-items: center;
-  align-self: stretch;
   display: flex;
-}
-
-.go-back {
-  border-radius: 50%;
-  background: #f2f2f7;
-  border: none;
-  border-radius: 50%;
-  color: #000;
-  height: 40px;
-  justify-content: center;
+  align-items: center;
+  justify-content: space-between;
   position: relative;
-  text-decoration: none;
-  width: 40px;
-}
-
-.go-back:hover {
-  background: #0003;
-}
-
-h1 {
-  color: #fd6632;
-  font-size: 1.5rem;
-  font-weight: 600;
-  text-align: center;
 }
 
 .logo {
-  height: auto;
   width: clamp(50px, 18vw, 70px);
+  height: auto;
   cursor: pointer;
   transition: transform 0.2s ease;
 }
 
 .logo:hover {
   transform: scale(1.03);
+}
+
+h1 {
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
+  font-weight: 600;
+  color: #fd6632;
+  text-align: center;
+  flex-shrink: 1;
+  min-width: 0;
 }
 
 .header__spacer {
@@ -80,7 +57,40 @@ h1 {
 .actions {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
   gap: 10px;
+}
+
+.go-back {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: #f2f2f7;
+  border: none;
+  color: #000;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  flex-shrink: 0;
+}
+
+.go-back:hover {
+  background: #0003;
+}
+
+.favorite {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  flex-shrink: 0;
+}
+
+.favorite:hover {
+  transform: scale(1.1);
+  opacity: 0.8;
 }
 
 .btn-feedback {
@@ -89,28 +99,18 @@ h1 {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 8px 12px;
+  padding: 6px 10px;
   border-radius: 12px;
   background: #f2f2f7;
   color: #2b2b2b;
-  font: 600 0.875rem/1 system-ui, -apple-system, "Segoe UI", Roboto, Inter,
-    Arial;
+  font-weight: 600;
+  font-size: 0.8rem;
+  line-height: 1;
   text-decoration: none;
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.15s ease;
   white-space: nowrap;
-}
-
-.favorite {
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-  transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-.favorite:hover {
-  transform: scale(1.1);
-  opacity: 0.8;
+  flex-shrink: 0;
 }
 
 .btn-feedback:hover {
@@ -122,36 +122,11 @@ h1 {
   transform: translateY(0);
 }
 
-/* ---------- Responsive Breakpoints ---------- */
-
 @media (min-width: 480px) {
   .btn-feedback {
     gap: 8px;
     padding: 8px 12px;
-    font-size: 0.9rem;
-    border-radius: 12px;
-  }
-}
-
-@media (min-width: 768px) {
-  .btn-feedback {
-    padding: 9px 14px;
-    font-size: 0.95rem;
-    border-radius: 14px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .btn-feedback {
-    padding: 10px 16px;
-    font-size: 1rem;
-  }
-}
-
-@media (min-width: 1280px) {
-  .btn-feedback {
-    padding: 12px 18px;
-    font-size: 1.05rem;
+    font-size: 0.875rem;
   }
 }
 

@@ -224,8 +224,8 @@
 .copied-popup {
   position: absolute;
   top: -40px;
-  left: 0;
-  transform: translateX(50%);
+  left: 50px;
+  transform: translateY(50%);
   background: #2b2b2b;
   color: #fff;
   padding: 6px 12px;
@@ -283,10 +283,14 @@
 .steps__text {
   padding: 16px;
   text-align: left;
-  font-size: 36px;
+  font-size: clamp(1.2rem, 4vw, 1.6rem);
   font-weight: 500;
   word-break: break-word;
   letter-spacing: -1.08px;
+  flex-grow: 1;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  min-height: 0;
 }
 
 .steps__item {
@@ -302,6 +306,7 @@
   cursor: pointer;
   position: relative;
   transition: all 0.25s ease;
+  flex-shrink: 0;
 }
 
 .ingredients__check:checked {
