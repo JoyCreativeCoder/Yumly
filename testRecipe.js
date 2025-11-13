@@ -1,4 +1,4 @@
-import fetch from "node-fetch"; // if Node 18+, built-in fetch works
+import fetch from "node-fetch";
 
 const query = "Jollof Rice";
 
