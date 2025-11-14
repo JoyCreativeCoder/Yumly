@@ -14,6 +14,7 @@ export default function Home() {
   const [showModal, setShowModal] = useState(false);
   const [meal, setMeal] = useState("");
   const [isDone, setIsDone] = useState(false);
+  const [errorType, setErrorType] = useState<"invalid" | "server" | null>(null);
 
   const navigate = useNavigate();
 
@@ -65,7 +66,7 @@ export default function Home() {
       const { status, data } = await fetchRecipe(q);
 
       if (status === 400 && data.error) {
-        console.log("INVALID!");
+        setErrorType("invalid");
         setError(
           `"${q}" doesn't appear to be food-related. Please try searching for a recipe or dish name`
         );
@@ -89,10 +90,9 @@ export default function Home() {
       }
     } catch (err: any) {
       setIsDone(true);
-
+      setErrorType("server");
       if (err.message.includes("overloaded") || err.message.includes("quota")) {
-        console.log("overloaded");
-        setError("Our AI is currently busy 😔. Please try again in a moment.");
+        setError("Our AI is currently busy. Please try again in a moment.");
       } else if (err.message.includes("parse")) {
         setError("Something went wrong preparing the recipe. Please retry.");
       } else {
@@ -111,6 +111,7 @@ export default function Home() {
           onCancel={() => setShowModal(false)}
           isDone={isDone}
           errorMessage={error}
+          errorType={errorType}
         />
       )}
       <main className="home__content">
