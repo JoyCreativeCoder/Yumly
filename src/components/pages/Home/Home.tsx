@@ -4,16 +4,16 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../Header/Header";
 import Modal from "../../Modal/modal";
 import { Search } from "lucide-react";
-import Footer from "@/components/Footer/Footer";
+import { motion } from "framer-motion";
 
 export default function Home() {
   const [mode, setMode] = useState("recipes");
   const [query, setQuery] = useState("");
-  const [hint, setHint] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [meal, setMeal] = useState("");
+  const [isDone, setIsDone] = useState(false);
 
   const navigate = useNavigate();
 
@@ -37,11 +37,15 @@ export default function Home() {
       body: JSON.stringify({ query: q }),
     });
 
-    if (!res.ok) {
-      const errBody = await res.text();
-      throw new Error(`HTTP error! Status: ${res.status}, Body: ${errBody}`);
+    const data = await res.json();
+    console.log("DATA", data);
+
+    if (!res.ok && res.status !== 400) {
+      const errorMessage =
+        data.error || `Server responded with status ${res.status}`;
+      throw new Error(errorMessage);
     }
-    return res.json();
+    return { status: res.status, data };
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -54,11 +58,22 @@ export default function Home() {
 
     setError("");
     setLoading(true);
+    setIsDone(false);
     setShowModal(true);
-    setHint("");
 
     try {
-      const data = await fetchRecipe(q);
+      const { status, data } = await fetchRecipe(q);
+
+      if (status === 400 && data.error) {
+        console.log("INVALID!");
+        setError(
+          `"${q}" doesn't appear to be food-related. Please try searching for a recipe or dish name`
+        );
+        setLoading(false);
+        setIsDone(true);
+        setShowModal(true);
+        return;
+      }
       const valid =
         data &&
         typeof data.title === "string" &&
@@ -68,16 +83,22 @@ export default function Home() {
         typeof data.calories === "number";
 
       if (valid) {
+        setIsDone(true);
         setShowModal(false);
         navigate("/recipe", { state: { recipe: data } });
-      } else {
-        setHint("No recipe found or invalid format. Try a simpler term.");
-        console.warn("Invalid recipe data:", data);
       }
-    } catch (err) {
-      setError("Something went wrong. Please try again.");
+    } catch (err: any) {
+      setIsDone(true);
+
+      if (err.message.includes("overloaded") || err.message.includes("quota")) {
+        console.log("overloaded");
+        setError("Our AI is currently busy 😔. Please try again in a moment.");
+      } else if (err.message.includes("parse")) {
+        setError("Something went wrong preparing the recipe. Please retry.");
+      } else {
+        setError("Unexpected error. Please try again.");
+      }
       console.error(err);
-    } finally {
       setLoading(false);
     }
   };
@@ -85,9 +106,22 @@ export default function Home() {
   return (
     <div className="home">
       <Header />
-      {showModal && <Modal onCancel={() => setShowModal(false)} />}
+      {showModal && (
+        <Modal
+          onCancel={() => setShowModal(false)}
+          isDone={isDone}
+          errorMessage={error}
+        />
+      )}
       <main className="home__content">
-        <h1 className="hero_text">What are you making for {meal}?</h1>
+        <motion.h1
+          className="hero_text"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
+          What are you making for {meal}?
+        </motion.h1>
         <div className="mode-toggle" role="tablist" aria-label="Search mode">
           <button
             className={`btn btn--chip ${

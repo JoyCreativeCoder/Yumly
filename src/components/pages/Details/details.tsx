@@ -1,5 +1,5 @@
 import "./details.css";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { AlarmClock, Copy, Flame, Utensils } from "lucide-react";
 import { Header1 } from "@/components/Header/Header";

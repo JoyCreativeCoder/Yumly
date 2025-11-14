@@ -1,5 +1,4 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-// Import the new SDK components
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 
 // 1. This Defines the Schema for guaranteed JSON structure(it heleps us to ensure that our ai returns response in the exact specified structure)
@@ -59,7 +58,31 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({ error: "Missing Gemini API key" });
 
   try {
-    const prompt = `Generate a complete recipe for "${query}". You are a professional chef. Ensure you include the total preparation and cooking time in minutes.`;
+    // const prompt = `Generate a complete recipe for "${query}". You are a professional chef. Ensure you include the total preparation and cooking time in minutes.`;
+
+    const prompt = `
+You are an expert chef and recipe validator.
+
+The user typed: "${query}"
+
+Your tasks:
+
+1. First, determine if the user input refers to a real food item, recipe name, ingredient, or dish name.
+   Examples of INVALID inputs:
+   - symbols (^^, !!!, @@@)
+   - nonsense strings (asdf, 123abc, xxxxx)
+   - unrelated concepts (cars, phones, cities)
+   - empty or meaningless words
+
+2. If the input is NOT related to food or cooking:
+   Respond EXACTLY with this JSON:
+   {"error": "INVALID_QUERY"}
+
+3. If the input IS a food item or recipe name:
+   Generate a complete recipe using the required JSON schema.
+   DO NOT add any extra fields. Fill in all required schema fields.
+   Ensure the recipe is real, meaningful, and follows normal cooking logic.
+`;
 
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
@@ -78,11 +101,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     let recipe;
     try {
       recipe = JSON.parse(rawText);
+      console.log("THE RECIPE", recipe);
     } catch (parseError) {
       console.error("JSON Parsing Error:", parseError);
       return res
         .status(500)
         .json({ error: "Could not parse structured recipe output." });
+    }
+
+    if (recipe.title === "INVALID_QUERY") {
+      console.log("INVALID");
+      return res.status(400).json({
+        error: "Please enter a valid food item.",
+      });
     }
 
     // >>>>>>>>>>>>>>>>>>>>Getting recipe image from google<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
