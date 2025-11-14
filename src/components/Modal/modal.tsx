@@ -5,9 +5,15 @@ interface ModalProps {
   onCancel: () => void;
   isDone: boolean;
   errorMessage: string | null;
+  errorType: "invalid" | "server" | null;
 }
 
-export default function Modal({ onCancel, isDone, errorMessage }: ModalProps) {
+export default function Modal({
+  onCancel,
+  isDone,
+  errorMessage,
+  errorType,
+}: ModalProps) {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
@@ -34,12 +40,26 @@ export default function Modal({ onCancel, isDone, errorMessage }: ModalProps) {
       <div className="modal-container animate-modal">
         {errorMessage ? (
           <>
-            <img
-              src="/images/invalid.png"
-              className="invalid-img"
-              alt="Invalid query"
-            />
-            <h2>Invalid Search</h2>
+            {errorType === "invalid" ? (
+              <>
+                <img
+                  src="/images/invalid.png"
+                  className="invalid-img"
+                  alt="Invalid query"
+                />
+                <h2>Invalid Search</h2>
+              </>
+            ) : (
+              <>
+                <img
+                  src="/images/invalid.png"
+                  className="invalid-img"
+                  alt="Server error"
+                />
+                <h2>Something went wrong</h2>
+              </>
+            )}
+
             <p className="error-text">{errorMessage}</p>
           </>
         ) : (
