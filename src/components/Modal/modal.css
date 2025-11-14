@@ -4,33 +4,32 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 9999;
 }
 
-/* Modal box */
 .modal-container {
   background: #fff;
-  padding: 32px 40px;
-  border-radius: 16px;
-  width: 320px;
+  padding: 35px 40px;
+  border-radius: 12px;
+  width: 340px;
   text-align: center;
-  color: #2b2b2b;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  color: #1a1a1a;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
 }
 
 .animate-modal {
-  animation: popIn 0.4s ease forwards;
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
 @keyframes popIn {
   from {
     opacity: 0;
-    transform: scale(0.8) translateY(30px);
+    transform: scale(0.9) translateY(20px);
   }
   to {
     opacity: 1;
@@ -38,12 +37,17 @@
   }
 }
 
-/* Spinner */
+.modal-container h2 {
+  margin: 0 0 5px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
 .spinner {
-  width: 50px;
-  height: 50px;
-  border: 5px solid #eee;
-  border-top: 5px solid #fd6632;
+  width: 55px;
+  height: 55px;
+  border: 4px solid #f0f0f0;
+  border-top: 4px solid #fd6632;
   border-radius: 50%;
   margin: 0 auto 20px;
   animation: spin 1s linear infinite;
@@ -55,41 +59,57 @@
   }
 }
 
-/* Text */
 .time-text {
-  margin: 6px 0 16px;
-  color: #555;
+  margin: 5px 0 20px;
+  color: #777;
   font-size: 14px;
 }
 
-/* Progress bar */
 .progress-bar {
   width: 100%;
-  height: 8px;
-  background: #eee;
-  border-radius: 6px;
-  margin-bottom: 18px;
+  height: 10px;
+  background: #e9e9e9;
+  border-radius: 5px;
+  margin-bottom: 25px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #fd6632, #ff9248);
-  border-radius: 6px;
-  transition: width 0.2s linear;
+  background: linear-gradient(90deg, #e74c3c, #fd6632);
+  border-radius: 5px;
+  transition: width 0.3s ease-out;
+}
+
+.invalid-img {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 15px;
+}
+
+.error-text {
+  color: #fd6632;
+  font-size: 15px;
+  font-weight: 500;
+  margin: 10px 0 25px;
 }
 
 .cancel-btn {
   background: #2b2b2b;
   color: white;
   border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
+  padding: 10px 24px;
+  border-radius: 6px;
   cursor: pointer;
-  font-weight: 500;
-  transition: background 0.2s ease;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: background 0.2s ease, transform 0.1s ease;
 }
 
 .cancel-btn:hover {
   background: #444;
+}
+
+.cancel-btn:active {
+  transform: scale(0.98);
 }
