@@ -31,11 +31,11 @@ export default function Home() {
     }
   }, []);
 
-  async function fetchRecipe(q: string) {
+  async function fetchRecipe(q: string, searchMode: string) {
     const res = await fetch("/api/recipes/search", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: q }),
+      body: JSON.stringify({ query: q, mode: searchMode }),
     });
 
     const data = await res.json();
@@ -63,7 +63,7 @@ export default function Home() {
     setShowModal(true);
 
     try {
-      const { status, data } = await fetchRecipe(q);
+      const { status, data } = await fetchRecipe(q, mode);
 
       if (status === 400 && data.error) {
         setErrorType("invalid");

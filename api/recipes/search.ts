@@ -58,13 +58,40 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST")
     return res.status(405).json({ error: "Only POST requests allowed" });
 
-  const { query } = req.body;
+  const { query, mode } = req.body;
   if (!query) return res.status(400).json({ error: "Missing query" });
   if (!process.env.GEMINI_API_KEY)
     return res.status(500).json({ error: "Missing Gemini API key" });
 
   try {
-    const prompt = `
+    let prompt: string;
+    if (mode === "ingredients") {
+      prompt = `
+You are an expert chef who specializes in two tasks: **validating user input** and creating dishes based on limited ingredients.
+
+The user provided input: "${query}".
+
+Your tasks:
+
+1. First, determine if the user input refers to a real food item, ingredient, or a list of food items/ingredients.
+    Examples of INVALID inputs:
+    - symbols (^^, !!!, @@@)
+    - nonsense strings (asdf, 123abc, xxxxx)
+    - unrelated concepts (cars, phones, cities)
+    - empty or meaningless words
+
+2. If the input is NOT related to food or cooking:
+    Respond EXACTLY with this JSON:
+    {"error": "INVALID_QUERY"}
+
+3. If the input IS a valid food item or list of ingredients:
+    a. Determine the single most suitable and complete dish that can be made using the ingredients provided in the input.
+    b. Generate a complete recipe for the **suggested dish** using the required JSON schema.
+    c. DO NOT add any extra fields. Fill in all required schema fields.
+    d. Ensure the recipe is real, meaningful, and follows normal cooking logic.
+`;
+    } else {
+      prompt = `
 You are an expert chef and recipe validator. Your final output must be a single, valid JSON object following the required schema.
 
 The user typed: "${query}"
@@ -88,6 +115,7 @@ Your tasks:
     c. **DO NOT** add any extra fields. **Fill in all required schema fields, including the video link field.**
     d. Ensure the recipe is real, meaningful, and follows normal cooking logic.
 `;
+    }
 
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
