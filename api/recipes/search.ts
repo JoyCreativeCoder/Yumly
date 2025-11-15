@@ -64,32 +64,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({ error: "Missing Gemini API key" });
 
   try {
-    // const prompt = `Generate a complete recipe for "${query}". You are a professional chef. Ensure you include the total preparation and cooking time in minutes.`;
-
-    //     const prompt = `
-    // You are an expert chef and recipe validator.
-
-    // The user typed: "${query}"
-
-    // Your tasks:
-
-    // 1. First, determine if the user input refers to a real food item, recipe name, ingredient, or dish name.
-    //    Examples of INVALID inputs:
-    //    - symbols (^^, !!!, @@@)
-    //    - nonsense strings (asdf, 123abc, xxxxx)
-    //    - unrelated concepts (cars, phones, cities)
-    //    - empty or meaningless words
-
-    // 2. If the input is NOT related to food or cooking:
-    //    Respond EXACTLY with this JSON:
-    //    {"error": "INVALID_QUERY"}
-
-    // 3. If the input IS a food item or recipe name:
-    //    Generate a complete recipe using the required JSON schema.
-    //    DO NOT add any extra fields. Fill in all required schema fields.
-    //    Ensure the recipe is real, meaningful, and follows normal cooking logic.
-    // `;
-
     const prompt = `
 You are an expert chef and recipe validator. Your final output must be a single, valid JSON object following the required schema.
 
