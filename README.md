@@ -56,6 +56,7 @@ Each recipe includes:
 ---
 
 ## Live Demo
+![Yumly Preview](/images/Screenshot.png)
 
 [Yumly on Vercel](https://yumly-gray.vercel.app/)
 
