@@ -1,77 +1,77 @@
-<<<<<<< HEAD
+# Yumly – AI-Powered Recipe Finder
 
-=======
-# React + TypeScript + Vite
+Yumly is a modern recipe finder application that allows users to explore meals, generate recipes, and search using multiple methods. Built with **React** and **TypeScript** and deployed on **Vercel**, Yumly provides a responsive and smooth user experience across all devices.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+---
 
-Currently, two official plugins are available:
+## Dual Search Modes
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Ingredient search:** Users enter the ingredients they have, and Yumly generates an AI-powered recipe suggestion.  
+- **Direct recipe search:** Users search for any dish directly and receive instant results.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## AI-Enhanced Experience
 
-## Expanding the ESLint configuration
+- Intelligent recipe generation  
+- Detailed recipe insights
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Recipe Details Page
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Each recipe includes:  
+- Ingredient list  
+- Step-by-step instructions  
+- AI-generated cooking guidance  
+- Recipe image fetched using the Google Search Engine  
+- Calories, servings, and estimated cooking time
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## User Experience
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- Dynamic time-based greetings  
+- Smooth interactions and transitions  
+- Fully responsive UI
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
->>>>>>> 52affb8 ( scaffold React app and  Home feed skeleton (Header, layout, CSS))
+---
+
+## Reliability
+
+- Clear error feedback  
+- Well-designed empty states  
+- Graceful fallback behavior
+
+---
+
+## Tech Stack
+
+- React  
+- TypeScript  
+- Vercel  
+- CSS (responsive design)  
+- Custom API utilities
+
+---
+
+## Live Demo
+
+[Yumly on Vercel](https://yumly-gray.vercel.app/)
+
+---
+
+## Setup & Installation
+
+```bash
+# Clone the project
+git clone https://github.com/JoyCreativeCoder/yumly.git
+
+# Navigate into the folder
+cd yumly
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
